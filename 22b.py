@@ -1,7 +1,5 @@
 import json
-from os import urandom
-from struct import unpack
-from simon import SimonCipher
+
 
 
 
@@ -65,21 +63,16 @@ def calculate_round_keys(entries):
             new_xor = "{0:064b}".format(calculate_xor(encrypted, entry[0]))
             entries[index] = [encrypted, entry[0], new_xor, entry[3]]
 
-
-
-        #print(round_key)
         round_keys.append(round_key)
     return round_keys
-
-
-
 
 
 if __name__ == '__main__':
 
 
     samples = json.load(open('test_samples.json'))
-    print(samples[0])
+    test_key = "01010110100111111010110010110010000101110000001011011100000101010110111101011100101000111111010000110010001001011100100010111010"
+    #print(samples[0])
 
     entries = []
 
@@ -100,4 +93,9 @@ if __name__ == '__main__':
     round_keys = calculate_round_keys(entries)
     for round_key in round_keys:
         print(round_key)
-    print(len(round_keys))
+
+    master_key = round_keys[1] + round_keys[0]
+
+    print("Key is {}".format(master_key))
+    print(test_key == master_key)
+    #print(len(round_keys))
