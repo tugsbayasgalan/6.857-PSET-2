@@ -1,8 +1,5 @@
 import json
 
-
-
-
 word_size = 64
 mod_mask = (2 ** word_size) - 1
 
@@ -32,14 +29,28 @@ def calculate_bit(i , entries):
             zero_entries.append(entry)
 
     # calculate average ones
-    sum_one = 0
+    sum_zero_one = 0
     for entry in zero_entries:
-        sum_one += entry[3]
+        sum_zero_one += entry[3]
 
-    avg_one = sum_one/len(zero_entries)
-    #print (avg_one)
+    avg_zero_one = sum_zero_one/len(zero_entries)
+    #print (avg_zero_one)
 
-    if avg_one <= 4352: # 128*68/2
+    # find all ones in i th position
+    one_entries = []
+    for entry in entries:
+        if entry[2][i] == "1":
+            one_entries.append(entry)
+
+    # calculate average ones
+    sum_one_one = 0
+    for entry in one_entries:
+        sum_one_one += entry[3]
+
+    avg_one_one = sum_one_one/len(one_entries)
+    #print (avg_zero_one + avg_one_one)
+
+    if avg_zero_one < avg_one_one:
         return 0
     return 1
 
@@ -70,7 +81,7 @@ def calculate_round_keys(entries):
 if __name__ == '__main__':
 
 
-    samples = json.load(open('test_samples.json'))
+    samples = json.load(open('samples.json'))
     test_key = "01010110100111111010110010110010000101110000001011011100000101010110111101011100101000111111010000110010001001011100100010111010"
     #print(samples[0])
 
@@ -97,5 +108,5 @@ if __name__ == '__main__':
     master_key = round_keys[1] + round_keys[0]
 
     print("Key is {}".format(master_key))
-    print(test_key == master_key)
-    #print(len(round_keys))
+    #print(test_key == master_key)
+    print(len(round_keys))
